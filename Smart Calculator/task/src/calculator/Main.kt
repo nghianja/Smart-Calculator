@@ -10,10 +10,18 @@ fun main() {
         val tokens = line.split(" ")
         when (tokens.size) {
             1 -> {
-                    if (tokens[0] == "/exit") break@loop
-                    println(tokens[0].toInt())
+                    when (tokens[0]) {
+                        "/exit" -> break@loop
+                        "/help" -> println("The program calculates the sum of numbers")
+                        else -> println(tokens[0].toInt())
+                    }
             }
-            2 -> println(tokens[0].toInt() + tokens[1].toInt())
+            else -> {
+                var sum = 0
+                for (i in 0 until tokens.size)
+                    sum += tokens[i].toInt()
+                println(sum)
+            }
         }
     }
     println("Bye!")
