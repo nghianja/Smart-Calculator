@@ -1,9 +1,9 @@
 package calculator
 
+import java.math.BigInteger
 import java.util.Scanner
-import kotlin.math.pow
 
-val assignments = mutableMapOf<String, Int>()
+val assignments = mutableMapOf<String, BigInteger>()
 
 fun <T> MutableList<T>.push(element: T): Boolean {
     return this.add(element)
@@ -47,7 +47,7 @@ fun isAssignment(line: String): Boolean {
         }
         val valstr = tokens[1].trim()
         val value = if (!isAlpha(valstr)) {
-            valstr.toIntOrNull() ?: throw Exception("Invalid assignment")
+            valstr.toBigIntegerOrNull() ?: throw Exception("Invalid assignment")
         } else {
             assignments[valstr] ?: throw Exception("Unknown variable")
         }
@@ -111,7 +111,7 @@ fun toInfix(line: String): MutableList<String> {
                         }
                         prev = line[i]
                     }
-                    ')', '*', '/' -> {
+                    ')', '^', '*', '/' -> {
                         if (prev != null)
                             throw Exception("Invalid expression")
                         prev = line[i]
@@ -176,24 +176,24 @@ fun toPostfix(line: String): MutableList<String> {
 }
 
 fun calculateSum(line: String) {
-    val sum = mutableListOf<Int>()
+    val sum = mutableListOf<BigInteger>()
     val postfix = toPostfix(line)
     for (i in postfix.indices) {
         when {
-            postfix[i][0].isDigit() -> sum.push(postfix[i].toInt())
+            postfix[i][0].isDigit() -> sum.push(postfix[i].toBigInteger())
             postfix[i][0].isLetter() -> {
                 val num = assignments[postfix[i]] ?: throw Exception("Unknown variable")
                 sum.push(num)
             }
             else -> {
                 val num1 = sum.pop()!!
-                val num2 = sum.pop() ?: 0
-                val num3: Int = when (postfix[i][0]) {
+                val num2 = sum.pop() ?: BigInteger.ZERO
+                val num3: BigInteger = when (postfix[i][0]) {
                     '*' -> num2 * num1
                     '/' -> num2 / num1
                     '+' -> num2 + num1
                     '-' -> num2 - num1
-                    else -> num1.toDouble().pow(num2.toDouble()).toInt()
+                    else -> num2.pow(num1.toInt())
                 }
                 sum.push(num3)
             }
