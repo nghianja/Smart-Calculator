@@ -4,9 +4,15 @@ while True:
     if len(numbers) == 0:
         continue
     if len(numbers) == 1:
-        if numbers[0] == "/exit":
+        if numbers[0] == "/help":
+            print('The program calculates the sum of numbers')
+        elif numbers[0] == "/exit":
             break
-        print(int(numbers[0]))
+        else:
+            print(int(numbers[0]))
     else:
-        print(int(numbers[0]) + int(numbers[1]))
+        total = 0
+        for n in numbers:
+            total += int(n)
+        print(total)
 print('Bye!')
